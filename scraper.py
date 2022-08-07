@@ -8,15 +8,14 @@ from collections import OrderedDict
 i = open('links/links.json')
 j = open('links/fighter_links.json')
 k = open('extra/forbbiden.json')
-l = open('extra/extra.json')
-extra = json.load(l)
 forbidden = json.load(k)
 directory = json.load(i)
 fighter_links = json.load(j)
 
+
 # I can't even believe this actually works
 # LETS GO!!!
-# This will scrap all of the data for us
+# This will scrap all of the data
 # data:
     # lists:
         # fighter profile links
@@ -107,7 +106,7 @@ class scraper:
 
                 # this is the formatting for the data json dump
                 # the fight information will go into the 'fights' key
-                format = {'ID': id_counter, 
+                format = {                    'ID': id_counter, 
                                             'name': None, 
                                           'record': None, 
                                         'nickname': None, 
@@ -190,7 +189,7 @@ class scraper:
                 # this will be appended the end of format
                 fight_counter = 1
                 for fight in list_of_fights:
-                    fight_format = {    'ID' : fight_counter,
+                    fight_format = {               'ID' : fight_counter,
                                               'win/loss': None, 
                                              'fighter 1': None, 
                                              'fighter 2': None, 
