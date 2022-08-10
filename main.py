@@ -1,33 +1,37 @@
 # pulls all fighter info and links
 from scraper import scraper
 # dumps all data into jsons
-from dump import fighter_info_dump 
-from dump import fighter_links_dump
+from dump import dump
 # keeps track of runtime
 import timeit
 
-
-# Tracking wall runtime
-start = timeit.default_timer()
-
 # runs all functions and updates jsons 
 def main():
-    # update fighter links
+    # Tracking wall runtime
+    start = timeit.default_timer()
+
+    # get fighter profile links
     print('1/8 - Collecting Fighter Profile Links.')
-    links = scraper.fighter_links()
+    links = scraper.get_fighter_profile_links()
     print("2/8 - Fighter Profile Links: DONE!")
+
+    # dump fighter profile links
     print("3/8 - Started to dump links in JSON.")
-    fighter_links_dump(links)
+    dump.fighter_links(links)
     print("4/8 - Links dumped in JSON. DONE!")
-    # update fighter info
+    
+    
+    # get fighter info
     print('5/8 - Starting to pull fighter profile information.')
-    info = scraper.fighters_info()
-    print("6/8 - Fighter Profile Information.")
+    info = scraper.get_fighter_info()
+    print("6/8 - Fighter Profile Information: DONE!.")
+
+    # dump fighter info
     print("7/8 - Started dumping info to JSON")
-    fighter_info_dump(info)
+    dump.fighter_info(info)
     print("8/8 - DUMPED INFORMATION!")
 
+    stop = timeit.default_timer()
+    print('Runtime: ', stop - start)
 
 main()
-stop = timeit.default_timer()
-print('Time: ', stop - start)

@@ -5,13 +5,6 @@ from bs4 import BeautifulSoup as bs
 # Data Manipulation
 from collections import OrderedDict
 
-i = open('links/links.json')
-j = open('links/fighter_links.json')
-k = open('extra/forbbiden.json')
-forbidden = json.load(k)
-directory = json.load(i)
-fighter_links = json.load(j)
-
 
 # I can't even believe this actually works
 # LETS GO!!!
@@ -30,7 +23,9 @@ class scraper:
         #### RETRIEVING ALL FIGHTER PROFILE LINKS ####
 
         # gets all fighter profile links
-        def fighter_links():
+        def get_fighter_profile_links():
+            i = open('links/links.json')
+            directory = json.load(i)
             # initializing list
             temp = []
 
@@ -40,18 +35,12 @@ class scraper:
             # this will give us the links for each fighter profile
             for link in directory:
                 # try to connect to the link
-                try:
-                    page = r.get(link,headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}, timeout=10)
-                # if request fails:
-                    # we will print the url to be aware of it
-                    # we will skip that link and move on
-                except r.exceptions.RequestException as i:
-                    print(f'URL: {link}', i)
+                html = url_reader(link)
+                if html == None:
                     continue
-                # read html
-                s = bs(page.content, "html.parser")
+
                 # locate all urls
-                URLS = s.find_all('td', {'class': 'b-statistics__table-col'})
+                URLS = html.find_all('td', {'class': 'b-statistics__table-col'})
 
                 # remove duplicate urls
                 for link in URLS:
@@ -67,10 +56,14 @@ class scraper:
         #### RETRIEVING ALL FIGHTER INFO ####
 
         # gets all fighter info
-        def fighters_info():
+        def get_fighter_info():
+            j = open('links/fighter_links.json')
+            k = open('extra/forbbiden.json')
+            forbidden = json.load(k)
+            fighter_links = json.load(j)
             # opening json file for links
             # getting and reading urls in links
-            data = {"data" : []}
+            data = {"data" : []} 
             id_counter = 1
 
             # we will pull each fighter individually
@@ -79,17 +72,12 @@ class scraper:
             # and their fights into the data dictionary
             # TODO FIX THIS HUGE LOOP!!
                 # possibly seperate into smaller functions? 
-            for url in fighter_links:
+            for link in fighter_links:
 
                 # try to site html and read it
-                try:
-                    page = r.get(url, headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}, timeout=10)
-                # if request fails, print URL and continue
-                except r.exceptions.RequestException as i:
-                    print(f'URL: {url}', i)    
+                html = url_reader(link)
+                if html == None:
                     continue
-                # read html
-                s = bs(page.content, "html.parser") 
 
                 # find all fighter info html
                 # including:
@@ -98,11 +86,11 @@ class scraper:
                         # nickname
                         # fight history
                         # fight details
-                NAME = s.find('span', {'class': 'b-content__title-highlight'})
-                RECORD = (s.find('span', {'class': 'b-content__title-record'})).text.strip()
-                NICKNAME = s.find('p', {'class': 'b-content__Nickname'})
-                DESCRIPTION = s.find_all('li', {'class': 'b-list__box-list-item b-list__box-list-item_type_block'})
-                FIGHT_DETAILS = s.find_all('p', {'class': 'b-fight-details__table-text'})
+                NAME = html.find('span', {'class': 'b-content__title-highlight'})
+                RECORD = (html.find('span', {'class': 'b-content__title-record'})).text.strip()
+                NICKNAME = html.find('p', {'class': 'b-content__Nickname'})
+                DESCRIPTION = html.find_all('li', {'class': 'b-list__box-list-item b-list__box-list-item_type_block'})
+                FIGHT_DETAILS = html.find_all('p', {'class': 'b-fight-details__table-text'})
 
                 # this is the formatting for the data json dump
                 # the fight information will go into the 'fights' key
@@ -133,6 +121,7 @@ class scraper:
                 for info in DESCRIPTION:
                     # append to text only
                     text_only.append(info.text.strip())
+                # thanks to stack over flow
                 temp = [key_val.split(":")[-1].strip() for key_val in text_only]
 
 
@@ -234,3 +223,15 @@ class scraper:
                     
             # return the juicy data ;) 
             return data
+
+def url_reader(url):
+    try:
+        page = r.get(url, headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}, timeout=10)
+    # if request fails:
+        # we will print the url to be aware of it
+        # we will skip that link and move on
+    except r.exceptions.RequestException as i:
+        print(f'URL: {url}', i)
+        return None
+    html = bs(page.content, "html.parser")
+    return html
