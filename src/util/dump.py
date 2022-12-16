@@ -1,6 +1,6 @@
 import json
 from scraper import getFighterProfileLinks, get_fighter_info
-from objects import FighterJSONENCODER
+from models.models import FighterJSONENCODER
 
 class dump:
     # dumps all fighter links into fighter_links.son
