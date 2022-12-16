@@ -2,8 +2,7 @@
 import requests as r
 import json
 from bs4 import BeautifulSoup as bs
-from objects import Fighter
-from objects import Event
+from objects import Fighter, Event
 # Data Manipulation
 from collections import OrderedDict
 
