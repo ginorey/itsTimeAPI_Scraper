@@ -2,7 +2,7 @@
     
 
         
-            "http://ufcstats.com/statistics/fighters?char=a&page=all",     
+            "http://ufcstats.com/statistics/fighters?char=a&page=all",
             "http://ufcstats.com/statistics/fighters?char=b&page=all",
             "http://ufcstats.com/statistics/fighters?char=c&page=all",
             "http://ufcstats.com/statistics/fighters?char=d&page=all",
@@ -28,7 +28,6 @@
             "http://ufcstats.com/statistics/fighters?char=x&page=all",
             "http://ufcstats.com/statistics/fighters?char=y&page=all",
             "http://ufcstats.com/statistics/fighters?char=z&page=all"
-
         
     
 ]
